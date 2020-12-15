@@ -2,7 +2,7 @@
 package service
 
 import (
-	"github.com/Sirok47/TOP_GAMES/model"
+	"github.com/Sirok47/TOP_GAMES-interfaces-/model"
 	"github.com/Sirok47/TOP_GAMES_srv-rps/srv+rps/repository"
 )
 
