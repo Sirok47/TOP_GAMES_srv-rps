@@ -29,3 +29,8 @@ func (r *TopGamesRedis) Create(g *model.SingleGame) error {
 	}
 	return nil
 }
+
+func (r *TopGamesPostgres) Create(g *model.SingleGame) error {
+	_, err := r.db.Exec("insert into TopGames (id,GameName,Rating,Platform,ReleaseDate) values ($1,$2,$3,$4,$5)", g.ID, g.Name, g.Rating, g.Platform, g.Date)
+	return err
+}

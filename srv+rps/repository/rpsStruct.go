@@ -3,6 +3,7 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 
 	"github.com/Sirok47/TOP_GAMES-interfaces-/model"
 	"github.com/gomodule/redigo/redis"
@@ -28,6 +29,10 @@ type TopGamesRedis struct {
 	db redis.Conn
 }
 
+type TopGamesPostgres struct {
+	db *sql.DB
+}
+
 // NewRepository is a constructor for creating "TopGames"'s object in repository package
 func NewMongoRepository(ctx context.Context, dbMongo *mongo.Collection) DBTemplate {
 	return &TopGamesMongo{dbMongo, ctx}
@@ -36,3 +41,8 @@ func NewMongoRepository(ctx context.Context, dbMongo *mongo.Collection) DBTempla
 func NewRedisRepository(dbRedis redis.Conn) DBTemplate {
 	return &TopGamesRedis{dbRedis}
 }
+
+func NewPostgresRepository(dbPostgres *sql.DB) DBTemplate {
+	return &TopGamesPostgres{dbPostgres}
+}
+

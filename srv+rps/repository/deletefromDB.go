@@ -25,3 +25,8 @@ func (r *TopGamesRedis) Delete(id int) error {
 	_, err := r.db.Do("EXPIRE", id, 0)
 	return errors.Wrap(err, "Delete failed")
 }
+
+func (r *TopGamesPostgres) Delete(id int) error {
+	_, err := r.db.Exec("delete from TopGames where id = $1", id)
+	return err
+}

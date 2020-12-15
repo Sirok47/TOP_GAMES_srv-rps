@@ -32,3 +32,8 @@ func (r *TopGamesMongo) Update(g *model.SingleGame) error {
 func (r *TopGamesRedis) Update(g *model.SingleGame) error {
 	return r.Create(g)
 }
+
+func (r *TopGamesPostgres) Update(g *model.SingleGame) error {
+	_, err := r.db.Exec("UPDATE TopGames SET GameName = $1, Rating = $2, Platform = $3, ReleaseDate = $4 WHERE Id = $5", g.Name, g.Rating, g.Platform, g.Date, g.ID)
+	return err
+}

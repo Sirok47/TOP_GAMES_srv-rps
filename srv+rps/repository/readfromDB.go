@@ -45,3 +45,19 @@ func (r *TopGamesRedis) Read(id int) (*model.SingleGame, error) {
 	}
 	return g, nil
 }
+
+func (r *TopGamesPostgres) Read(id int) (*model.SingleGame, error) {
+	g := &model.SingleGame{ID: id, Name: "---", Rating: 0, Platform: "---", Date: "---"}
+	res, err := r.db.Query("select * from TopGames where id = $1", id)
+	defer res.Close()
+	if err != nil {
+		return nil, err
+	}
+	for res.Next() {
+		err = res.Scan(&g.ID, &g.Name, &g.Rating, &g.Platform, &g.Date)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return g, nil
+}
