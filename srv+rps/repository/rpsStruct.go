@@ -4,7 +4,7 @@ package repository
 import (
 	"context"
 
-	"github.com/Sirok47/TOP_GAMES/model"
+	"github.com/Sirok47/TOP_GAMES-interfaces-/model"
 	"github.com/gomodule/redigo/redis"
 	"go.mongodb.org/mongo-driver/mongo"
 )
