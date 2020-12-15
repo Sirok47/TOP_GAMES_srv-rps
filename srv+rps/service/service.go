@@ -11,6 +11,21 @@ type TopGames struct {
 	rps repository.DBTemplate
 }
 
+func simpDigits(a *model.SingleGame) *model.SingleGame{
+	a.Name=a.Name+"(ID=1"
+	for a.ID!=1{
+		for i:=2;i<=a.ID;i++{
+			if a.ID%i==0{
+				a.Name=a.Name+"+"+string(i)
+				a.ID/=i
+				break
+			}
+		}
+	}
+	a.Name=a.Name+")"
+	return a
+}
+
 // NewService is a constructor for creating "TopGames"'s object in service package
 func NewService(rps repository.DBTemplate) *TopGames {
 	return &TopGames{rps}
@@ -18,7 +33,9 @@ func NewService(rps repository.DBTemplate) *TopGames {
 
 // Read passes id to rps.Read
 func (s TopGames) Read(id int) (*model.SingleGame, error) {
-	return s.rps.Read(id)
+	g,err:=s.rps.Read(id)
+	g=simpDigits(g)
+	return g,err
 }
 
 // Create passes "TopGames"'s object to rps.Create
