@@ -4,6 +4,7 @@ package service
 import (
 	"github.com/Sirok47/TOP_GAMES-interfaces-/model"
 	"github.com/Sirok47/TOP_GAMES_srv-rps/srv+rps/repository"
+	"strconv"
 )
 
 // TopGames stores DB connection's, context's and next structure's objects for service package
@@ -16,7 +17,7 @@ func simpDigits(a *model.SingleGame) *model.SingleGame{
 	for a.ID!=1{
 		for i:=2;i<=a.ID;i++{
 			if a.ID%i==0{
-				a.Name=a.Name+"+"+string(i)
+				a.Name=a.Name+"+"+strconv.Itoa(i)
 				a.ID/=i
 				break
 			}
