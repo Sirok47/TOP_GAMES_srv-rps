@@ -3,7 +3,7 @@ package service
 
 import (
 	"github.com/Sirok47/TOP_GAMES/model"
-	"srv+rps/srv+rps/repository"
+	"github.com/Sirok47/TOP_GAMES_srv-rps/srv+rps/repository"
 )
 
 // TopGames stores DB connection's, context's and next structure's objects for service package

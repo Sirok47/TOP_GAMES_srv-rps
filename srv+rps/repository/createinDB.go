@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/Sirok47/TOP_GAMES-interfaces-/model"
+	"github.com/Sirok47/TOP_GAMES/model"
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
 )
