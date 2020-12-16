@@ -17,7 +17,7 @@ func simpDigits(a *model.SingleGame) *model.SingleGame{
 	for a.ID!=1{
 		for i:=2;i<=a.ID;i++{
 			if a.ID%i==0{
-				a.Name=a.Name+"+"+strconv.Itoa(i)
+				a.Name=a.Name+"*"+strconv.Itoa(i)
 				a.ID/=i
 				break
 			}
