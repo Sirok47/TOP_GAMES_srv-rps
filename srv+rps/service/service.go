@@ -1,13 +1,11 @@
 // Package service just passes values to repository
-package main
+package service
 
 import (
 	"context"
 	grpcpb "github.com/Sirok47/TOP_GAMES-interfaces-/grpc"
 	"github.com/Sirok47/TOP_GAMES-interfaces-/model"
 	"github.com/Sirok47/TOP_GAMES_srv-rps/srv+rps/repository"
-	"google.golang.org/grpc"
-	"net"
 	"strconv"
 )
 
@@ -62,10 +60,3 @@ func (s *TopGames) Delete(ctx context.Context,rqs *grpcpb.Id) (*grpcpb.Errmsg,er
 	return &grpcpb.Errmsg{Err: err.Error()},nil
 }
 
-func main() {
-	s:=grpc.NewServer()
-	srv := &TopGames{}
-	grpcpb.RegisterCRUDServer(s,srv)
-	l,_:=net.Listen("tcp",":8080")
-	s.Serve(l)
-}
