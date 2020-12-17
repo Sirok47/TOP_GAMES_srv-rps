@@ -1,10 +1,13 @@
 // Package service just passes values to repository
-package service
+package main
 
 import (
+	"context"
 	grpcpb "github.com/Sirok47/TOP_GAMES-interfaces-/grpc"
 	"github.com/Sirok47/TOP_GAMES-interfaces-/model"
 	"github.com/Sirok47/TOP_GAMES_srv-rps/srv+rps/repository"
+	"google.golang.org/grpc"
+	"net"
 	"strconv"
 )
 
@@ -33,28 +36,36 @@ func NewService(rps repository.DBTemplate) *TopGames {
 }
 
 // Read passes id to rps.Read
-func (s *TopGames) Read(_, rqs *grpcpb.Id) (*grpcpb.Structmsg, error) {
+func (s *TopGames) Read(ctx context.Context, rqs *grpcpb.Id) (*grpcpb.Structmsg, error) {
 	g,err:=s.rps.Read(int(rqs.ID))
 	simpDigits(g)
 	gg:=&grpcpb.Structmsg{ID: int32(g.ID),Name: g.Name,Rating: int32(g.Rating),Platform: g.Platform,Date: g.Date,Err: err.Error()}
 	return gg,nil
 }
 // Create passes "TopGames"'s object to rps.Create
-func (s *TopGames) Create(_,g *grpcpb.Structmsg) (*grpcpb.Errmsg,error) {
+func (s *TopGames) Create(ctx context.Context,g *grpcpb.Structmsg) (*grpcpb.Errmsg,error) {
 	gg:=&model.SingleGame{ID: int(g.ID), Name: g.Name, Rating: float64(g.Rating), Platform: g.Platform, Date: g.Date}
 	err:=s.rps.Create(gg)
 	return &grpcpb.Errmsg{Err: err.Error()},nil
 }
 
 // Update passes "TopGames"'s object to rps.Update
-func (s *TopGames) Update(_,g *grpcpb.Structmsg) (*grpcpb.Errmsg,error) {
+func (s *TopGames) Update(ctx context.Context,g *grpcpb.Structmsg) (*grpcpb.Errmsg,error) {
 	gg:=&model.SingleGame{ID: int(g.ID), Name: g.Name, Rating: float64(g.Rating), Platform: g.Platform, Date: g.Date}
 	err:=s.rps.Create(gg)
 	return &grpcpb.Errmsg{Err: err.Error()},nil
 }
 
 // Delete passes id to rps.Delete
-func (s *TopGames) Delete(_,rqs *grpcpb.Id) (*grpcpb.Errmsg,error) {
+func (s *TopGames) Delete(ctx context.Context,rqs *grpcpb.Id) (*grpcpb.Errmsg,error) {
 	err:=s.rps.Delete(int(rqs.ID))
 	return &grpcpb.Errmsg{Err: err.Error()},nil
+}
+
+func main() {
+	s:=grpc.NewServer()
+	srv := &TopGames{}
+	grpcpb.RegisterCRUDServer(s,srv)
+	l,_:=net.Listen("tcp",":8080")
+	s.Serve(l)
 }

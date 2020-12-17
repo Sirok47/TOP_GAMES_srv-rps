@@ -4,6 +4,7 @@ github.com/Sirok47/TOP_GAMES-interfaces- v0.0.0-20201215085411-982006479e4b/go.m
 github.com/Sirok47/TOP_GAMES-interfaces- v0.0.0-20201217112344-be5101872fce h1:Y35dvlhdDfd5R9oQK30cFQVKUthVVWXxdTRRpQhDXII=
 github.com/Sirok47/TOP_GAMES-interfaces- v0.0.0-20201217112344-be5101872fce/go.mod h1:B6oftM/2lceofRXj+i7MaLRGNZq32/zjiDg6qvaA4b8=
 github.com/Sirok47/TOP_GAMES_srv-rps v0.0.0-20201214145446-548159981aac/go.mod h1:Q0TJ463UW38BVSSL6TdfLeRnT77v3n2HM540WLqyu34=
+github.com/Sirok47/TOP_GAMES_srv-rps v0.0.0-20201216082318-1513eaefa69a h1:hzWcS5MjZNHL+deCMGf/1Z8hJoEfueZ5Q7/61i1orPw=
 github.com/Sirok47/TOP_GAMES_srv-rps v0.0.0-20201216082318-1513eaefa69a/go.mod h1:J8SS45Q6vH+BPZpRy9g0bfRb1MvNQvXAVrknt51hzjc=
 github.com/aws/aws-sdk-go v1.34.28 h1:sscPpn/Ns3i0F4HPEWAVcwdIRaZZCuL7llJ2/60yPIk=
 github.com/aws/aws-sdk-go v1.34.28/go.mod h1:H7NKnBqNVzoTJpGfLrQkkD+ytBA93eiDYi/+8rV9s48=
