@@ -2,6 +2,7 @@
 package service
 
 import (
+	grpcpb "github.com/Sirok47/TOP_GAMES-interfaces-/grpc"
 	"github.com/Sirok47/TOP_GAMES-interfaces-/model"
 	"github.com/Sirok47/TOP_GAMES_srv-rps/srv+rps/repository"
 	"strconv"
@@ -12,7 +13,7 @@ type TopGames struct {
 	rps repository.DBTemplate
 }
 
-func simpDigits(a *model.SingleGame) *model.SingleGame{
+func simpDigits(a *model.SingleGame) {
 	a.Name=a.Name+"(ID=1"
 	b:=a.ID
 	for b!=1{
@@ -25,7 +26,6 @@ func simpDigits(a *model.SingleGame) *model.SingleGame{
 		}
 	}
 	a.Name=a.Name+")"
-	return a
 }
 // NewService is a constructor for creating "TopGames"'s object in service package
 func NewService(rps repository.DBTemplate) *TopGames {
@@ -33,23 +33,28 @@ func NewService(rps repository.DBTemplate) *TopGames {
 }
 
 // Read passes id to rps.Read
-func (s TopGames) Read(id int) (*model.SingleGame, error) {
-	g,err:=s.rps.Read(id)
-	g=simpDigits(g)
-	return g,err
+func (s *TopGames) Read(_, rqs *grpcpb.Id) (*grpcpb.Structmsg, error) {
+	g,err:=s.rps.Read(int(rqs.ID))
+	simpDigits(g)
+	gg:=&grpcpb.Structmsg{ID: int32(g.ID),Name: g.Name,Rating: int32(g.Rating),Platform: g.Platform,Date: g.Date,Err: err.Error()}
+	return gg,nil
 }
-
 // Create passes "TopGames"'s object to rps.Create
-func (s TopGames) Create(g *model.SingleGame) error {
-	return s.rps.Create(g)
+func (s *TopGames) Create(_,g *grpcpb.Structmsg) (*grpcpb.Errmsg,error) {
+	gg:=&model.SingleGame{ID: int(g.ID), Name: g.Name, Rating: float64(g.Rating), Platform: g.Platform, Date: g.Date}
+	err:=s.rps.Create(gg)
+	return &grpcpb.Errmsg{Err: err.Error()},nil
 }
 
 // Update passes "TopGames"'s object to rps.Update
-func (s TopGames) Update(g *model.SingleGame) error {
-	return s.rps.Update(g)
+func (s *TopGames) Update(_,g *grpcpb.Structmsg) (*grpcpb.Errmsg,error) {
+	gg:=&model.SingleGame{ID: int(g.ID), Name: g.Name, Rating: float64(g.Rating), Platform: g.Platform, Date: g.Date}
+	err:=s.rps.Create(gg)
+	return &grpcpb.Errmsg{Err: err.Error()},nil
 }
 
 // Delete passes id to rps.Delete
-func (s TopGames) Delete(id int) error {
-	return s.rps.Delete(id)
+func (s *TopGames) Delete(_,rqs *grpcpb.Id) (*grpcpb.Errmsg,error) {
+	err:=s.rps.Delete(int(rqs.ID))
+	return &grpcpb.Errmsg{Err: err.Error()},nil
 }
