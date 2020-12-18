@@ -8,5 +8,6 @@ require (
 	github.com/lib/pq v1.9.0
 	github.com/pkg/errors v0.9.1
 	go.mongodb.org/mongo-driver v1.4.4
+	golang.org/x/net v0.0.0-20201021035429-f5854403a974
 	google.golang.org/grpc v1.34.0
 )
