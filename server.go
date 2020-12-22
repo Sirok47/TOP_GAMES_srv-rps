@@ -15,9 +15,6 @@ import (
 	"net"
 	"time"
 )
-func (s *service.TopGames) mustEmbedUnimplementedCRUDServer() {
-	panic("implement me")
-}
 func main() {
 	const (
 		dbChoice = 0 // 0 for Postgres, 1 for Mongo, 2 for Redis
@@ -32,8 +29,9 @@ func main() {
 	)
 	db, err := sql.Open("postgres", "user=postgres password=glazirovanniisirok dbname=TOP_GAMES sslmode=disable")
 	if err!= nil{fmt.Println(err)}
-	con = service.NewService(repository.NewPostgresRepository(db))
+	con = service.NewService(repository.NewPostgresRepository(db),db)
 	switch dbChoice {
+		case 0:
 		case 1:
 			var cancel context.CancelFunc
 			client, _ := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
@@ -44,7 +42,7 @@ func main() {
 			_ = client.Connect(ctx)
 			collection = client.Database("TOP_GAMES").Collection("TopGames")
 			ctx = context.TODO()
-			con = service.NewService(repository.NewMongoRepository(ctx, collection))
+			con = service.NewService(repository.NewMongoRepository(ctx, collection),db)
 		case 2:
 			conn, err = redis.Dial("tcp", "localhost:6379")
 			if err != nil {
@@ -56,7 +54,7 @@ func main() {
 					return
 				}
 			}()
-			con = service.NewService(repository.NewRedisRepository(conn))
+			con = service.NewService(repository.NewRedisRepository(conn),db)
 		default:
 			return
 		}

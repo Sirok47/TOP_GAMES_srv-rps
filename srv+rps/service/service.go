@@ -3,6 +3,7 @@ package service
 
 import (
 	"context"
+	"database/sql"
 	grpcpb "github.com/Sirok47/TOP_GAMES-interfaces-/grpc"
 	"github.com/Sirok47/TOP_GAMES-interfaces-/model"
 	"github.com/Sirok47/TOP_GAMES_srv-rps/srv+rps/repository"
@@ -32,8 +33,8 @@ func simpDigits(a *model.SingleGame) {
 	a.Name=a.Name+")"
 }
 // NewService is a constructor for creating "TopGames"'s object in service package
-func NewService(rps repository.DBTemplate) *TopGames {
-	return &TopGames{rps,&repository.TopGamesPostgres{}}
+func NewService(rps repository.DBTemplate,d *sql.DB) *TopGames {
+	return &TopGames{rps,repository.PostgresRepository(d)}
 }
 
 
@@ -51,11 +52,10 @@ func (s *TopGames) Read(ctx context.Context, rqs *grpcpb.Id) (*grpcpb.Structmsg,
 
 func (s *TopGames) Login(ctx context.Context, rqs *grpcpb.Userstruct) (*grpcpb.Jwtoken, error) {
 	t,err:=s.rpsuser.Login(rqs.Name,rqs.Password)
-	err2:=""
 	if err != nil{
-		err2=err.Error()
+		return nil, err
 	}
-	return &grpcpb.Jwtoken{Token:t,Err:err2},nil
+	return &grpcpb.Jwtoken{Token:t},nil
 }
 // Create passes "TopGames"'s object to rps.Create
 func (s *TopGames) Create(ctx context.Context,g *grpcpb.Structmsg) (*grpcpb.Errmsg,error) {
@@ -70,11 +70,10 @@ func (s *TopGames) Create(ctx context.Context,g *grpcpb.Structmsg) (*grpcpb.Errm
 
 func (s *TopGames) CreateUser(ctx context.Context,g *grpcpb.Userstruct) (*grpcpb.Errmsg,error) {
 	err:=s.rpsuser.CreateUser(g.Name,g.Password)
-	err2:=""
 	if err != nil{
-		err2=err.Error()
+		return nil, err
 	}
-	return &grpcpb.Errmsg{Err: err2},nil
+	return &grpcpb.Errmsg{},nil
 }
 
 // Update passes "TopGames"'s object to rps.Update
@@ -90,11 +89,10 @@ func (s *TopGames) Update(ctx context.Context,g *grpcpb.Structmsg) (*grpcpb.Errm
 
 func (s *TopGames) UpdateUser(ctx context.Context,g *grpcpb.Userstruct) (*grpcpb.Errmsg,error) {
 	err:=s.rpsuser.UpdateUser(g.Name,g.Password)
-	err2:=""
 	if err != nil{
-		err2=err.Error()
+		return nil, err
 	}
-	return &grpcpb.Errmsg{Err: err2},nil
+	return &grpcpb.Errmsg{},nil
 }
 
 // Delete passes id to rps.Delete
@@ -109,10 +107,9 @@ func (s *TopGames) Delete(ctx context.Context,rqs *grpcpb.Id) (*grpcpb.Errmsg,er
 
 func (s *TopGames) DeleteUser(ctx context.Context,rqs *grpcpb.Userstruct) (*grpcpb.Errmsg,error) {
 	err:=s.rpsuser.DeleteUser(rqs.Name)
-	err2:=""
 	if err != nil{
-		err2=err.Error()
+		return nil, err
 	}
-	return &grpcpb.Errmsg{Err: err2},nil
+	return &grpcpb.Errmsg{},nil
 }
 

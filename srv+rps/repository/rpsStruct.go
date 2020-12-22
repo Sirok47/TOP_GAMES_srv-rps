@@ -46,3 +46,7 @@ func NewPostgresRepository(dbPostgres *sql.DB) DBTemplate {
 	return &TopGamesPostgres{dbPostgres}
 }
 
+func PostgresRepository(dbPostgres *sql.DB) *TopGamesPostgres {
+	return &TopGamesPostgres{dbPostgres}
+}
+
