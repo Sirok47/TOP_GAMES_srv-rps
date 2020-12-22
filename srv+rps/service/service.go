@@ -13,7 +13,9 @@ import (
 // TopGames stores DB connection's, context's and next structure's objects for service package
 type TopGames struct {
 	rps repository.DBTemplate
+	rpsuser *repository.TopGamesPostgres
 }
+
 
 func simpDigits(a *model.SingleGame) {
 	a.Name=a.Name+"(ID=1"
@@ -31,7 +33,7 @@ func simpDigits(a *model.SingleGame) {
 }
 // NewService is a constructor for creating "TopGames"'s object in service package
 func NewService(rps repository.DBTemplate) *TopGames {
-	return &TopGames{rps}
+	return &TopGames{rps,&repository.TopGamesPostgres{}}
 }
 
 
@@ -46,6 +48,15 @@ func (s *TopGames) Read(ctx context.Context, rqs *grpcpb.Id) (*grpcpb.Structmsg,
 	gg:=&grpcpb.Structmsg{ID: int32(g.ID),Name: g.Name,Rating: int32(g.Rating),Platform: g.Platform,Date: g.Date,Err: err2}
 	return gg,nil
 }
+
+func (s *TopGames) Login(ctx context.Context, rqs *grpcpb.Userstruct) (*grpcpb.Jwtoken, error) {
+	t,err:=s.rpsuser.Login(rqs.Name,rqs.Password)
+	err2:=""
+	if err != nil{
+		err2=err.Error()
+	}
+	return &grpcpb.Jwtoken{Token:t,Err:err2},nil
+}
 // Create passes "TopGames"'s object to rps.Create
 func (s *TopGames) Create(ctx context.Context,g *grpcpb.Structmsg) (*grpcpb.Errmsg,error) {
 	gg:=&model.SingleGame{ID: int(g.ID), Name: g.Name, Rating: float64(g.Rating), Platform: g.Platform, Date: g.Date}
@@ -57,10 +68,28 @@ func (s *TopGames) Create(ctx context.Context,g *grpcpb.Structmsg) (*grpcpb.Errm
 	return &grpcpb.Errmsg{Err: err2},nil
 }
 
+func (s *TopGames) CreateUser(ctx context.Context,g *grpcpb.Userstruct) (*grpcpb.Errmsg,error) {
+	err:=s.rpsuser.CreateUser(g.Name,g.Password)
+	err2:=""
+	if err != nil{
+		err2=err.Error()
+	}
+	return &grpcpb.Errmsg{Err: err2},nil
+}
+
 // Update passes "TopGames"'s object to rps.Update
 func (s *TopGames) Update(ctx context.Context,g *grpcpb.Structmsg) (*grpcpb.Errmsg,error) {
 	gg:=&model.SingleGame{ID: int(g.ID), Name: g.Name, Rating: float64(g.Rating), Platform: g.Platform, Date: g.Date}
-	err:=s.rps.Create(gg)
+	err:=s.rpsuser.Create(gg)
+	err2:=""
+	if err != nil{
+		err2=err.Error()
+	}
+	return &grpcpb.Errmsg{Err: err2},nil
+}
+
+func (s *TopGames) UpdateUser(ctx context.Context,g *grpcpb.Userstruct) (*grpcpb.Errmsg,error) {
+	err:=s.rpsuser.UpdateUser(g.Name,g.Password)
 	err2:=""
 	if err != nil{
 		err2=err.Error()
@@ -71,6 +100,15 @@ func (s *TopGames) Update(ctx context.Context,g *grpcpb.Structmsg) (*grpcpb.Errm
 // Delete passes id to rps.Delete
 func (s *TopGames) Delete(ctx context.Context,rqs *grpcpb.Id) (*grpcpb.Errmsg,error) {
 	err:=s.rps.Delete(int(rqs.ID))
+	err2:=""
+	if err != nil{
+		err2=err.Error()
+	}
+	return &grpcpb.Errmsg{Err: err2},nil
+}
+
+func (s *TopGames) DeleteUser(ctx context.Context,rqs *grpcpb.Userstruct) (*grpcpb.Errmsg,error) {
+	err:=s.rpsuser.DeleteUser(rqs.Name)
 	err2:=""
 	if err != nil{
 		err2=err.Error()
